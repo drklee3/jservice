@@ -1,0 +1,23 @@
+[package]
+name = "jservice-rs"
+version = "0.1.0"
+authors = ["drklee3 <derrick@dlee.dev>"]
+edition = "2018"
+
+[dependencies]
+async-trait = "0.1"
+chrono = "0.4"
+serde_derive = "^1.0"
+serde_json = "^1.0"
+
+[dependencies.reqwest]
+version = "0.10.8"
+features = ["json"]
+
+[dependencies.serde]
+version = "^1.0"
+features = ["derive"]
+
+[dev-dependencies.tokio]
+version = "0.2"
+features = ["full"]

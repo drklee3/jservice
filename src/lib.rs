@@ -15,6 +15,28 @@ macro_rules! api {
     };
 }
 
+/// Example usage
+///
+/// ```rust
+/// use jservice_rs::JServiceRequester;
+///
+/// #[tokio::main]
+/// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+///     let client = reqwest::Client::new();
+///
+///     let clues = client
+///         .get_clues(|options| options
+///             .value(600)
+///             .category(21)
+///         )
+///         .await?;
+///
+///     println!("{:?}", clues);
+///
+///     Ok(())
+/// }
+/// ```
+///
 #[async_trait]
 pub trait JServiceRequester {
     async fn get_clues<F>(&self, f: F) -> Result<Vec<Clue>>

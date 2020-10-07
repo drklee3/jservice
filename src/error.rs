@@ -1,5 +1,6 @@
 use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
+use std::error::Error as StdError;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::result::Result as StdResult;
 
@@ -30,5 +31,11 @@ impl Display for Error {
             Error::Reqwest(ref inner) => inner.fmt(f),
             Error::Json(ref inner) => inner.fmt(f),
         }
+    }
+}
+
+impl StdError for Error {
+    fn source(&self) -> Option<&(dyn StdError + 'static)> {
+        Some(self)
     }
 }

@@ -1,5 +1,5 @@
-use chrono::naive::NaiveDateTime;
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]
 pub struct Category {
@@ -7,13 +7,13 @@ pub struct Category {
 
     pub title: String,
 
-    #[serde(deserialize_with = "deserialize_datetime")]
-    pub created_at: NaiveDateTime,
+    pub created_at: Option<DateTime<Utc>>,
 
-    #[serde(deserialize_with = "deserialize_datetime")]
-    pub updated_at: NaiveDateTime,
+    pub updated_at: Option<DateTime<Utc>>,
 
     pub clues_count: u64,
+
+    pub clues: Option<Vec<Clue>>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -26,14 +26,11 @@ pub struct Clue {
 
     pub value: Option<u64>,
 
-    #[serde(deserialize_with = "deserialize_datetime")]
-    pub airdate: NaiveDateTime,
+    pub airdate: DateTime<Utc>,
 
-    #[serde(deserialize_with = "deserialize_datetime")]
-    pub created_at: NaiveDateTime,
+    pub created_at: Option<DateTime<Utc>>,
 
-    #[serde(deserialize_with = "deserialize_datetime")]
-    pub updated_at: NaiveDateTime,
+    pub updated_at: Option<DateTime<Utc>>,
 
     pub category_id: u64,
 
@@ -41,7 +38,7 @@ pub struct Clue {
 
     pub invalid_count: Option<u64>,
 
-    pub category: Category,
+    pub category: Option<Category>,
 }
 
 #[derive(Debug, Default, Serialize)]
@@ -50,33 +47,11 @@ pub struct ClueOptions {
 
     pub category: Option<u64>,
 
-    #[serde(serialize_with = "serialize_datetime")]
-    pub min_date: Option<NaiveDateTime>,
+    pub min_date: Option<DateTime<Utc>>,
 
-    #[serde(serialize_with = "serialize_datetime")]
-    pub max_date: Option<NaiveDateTime>,
+    pub max_date: Option<DateTime<Utc>>,
 
     pub offset: Option<u64>,
-}
-
-fn deserialize_datetime<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s: String = Deserialize::deserialize(deserializer)?;
-    NaiveDateTime::parse_from_str(&s, "%Y-%m-%dT%H:%M:%S.%fZ").map_err(de::Error::custom)
-}
-
-fn serialize_datetime<S>(date: &Option<NaiveDateTime>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    if let Some(date) = date {
-        let s = format!("{}", date.format("%Y-%m-%dT%H:%M:%S.%fZ"));
-        serializer.serialize_str(&s)
-    } else {
-        serializer.serialize_none()
-    }
 }
 
 #[derive(Default)]
@@ -96,13 +71,13 @@ impl ClueOptionsBuilder {
     }
 
     /// Earliest date to show, based on original air date
-    pub fn min_date(&mut self, min_date: NaiveDateTime) -> &mut Self {
+    pub fn min_date(&mut self, min_date: DateTime<Utc>) -> &mut Self {
         self.0.min_date.replace(min_date);
         self
     }
 
     /// Latest date to show, based on original air date
-    pub fn max_date(&mut self, max_date: NaiveDateTime) -> &mut Self {
+    pub fn max_date(&mut self, max_date: DateTime<Utc>) -> &mut Self {
         self.0.max_date.replace(max_date);
         self
     }

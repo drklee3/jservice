@@ -31,7 +31,7 @@ macro_rules! api {
 ///         )
 ///         .await?;
 ///
-///     println!("{:?}", clues);
+///     println!("{:#?}", clues);
 ///
 ///     Ok(())
 /// }

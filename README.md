@@ -3,7 +3,8 @@
 Async Rust API wrapper for [jService](https://jservice.io/).
 
 Provides a trait for an existing
-[Reqwest](https://github.com/seanmonstar/reqwest) client.
+[Reqwest](https://github.com/seanmonstar/reqwest) client, allowing you to bring
+your own client instead of using a built in one.
 
 ## Example
 
